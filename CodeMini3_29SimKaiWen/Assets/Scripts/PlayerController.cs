@@ -1,6 +1,7 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.UI;
 using UnityEngine.SceneManagement;
 
 public class PlayerController : MonoBehaviour
@@ -10,9 +11,14 @@ public class PlayerController : MonoBehaviour
     float gravityMod = 2.5f;
     float jumpCount = 0;
     bool isOnGround;
+    bool startTimer;
+    float timeCount = 5;
+    int timeCountInt;
+    bool rotateBack;
 
     public GameObject PlaneRotate;  
     public Animator PlayerAnim;
+    public GameObject timerText;
     Rigidbody playerRb;
 
     // Start is called before the first frame update
@@ -51,8 +57,35 @@ public class PlayerController : MonoBehaviour
         }
 
         PlayerJump();
+
+
+        if (startTimer == true)
+        {
+            timerCountDown();
+        }
+
     }
 
+    private void timerCountDown()
+    { 
+        if(timeCount > 0)
+        {
+            timeCount -= Time.deltaTime;
+            timeCountInt = Mathf.RoundToInt(timeCount);
+        }
+
+        timerText.GetComponent<Text>().text = "Timer: " + timeCountInt;
+
+    }
+    /*
+    private void RotateBack()
+    {
+   
+            PlaneRotate.gameObject.transform.position = new Vector3(-5, 3, 10);
+            PlaneRotate.gameObject.transform.Rotate(new Vector3(0, 270, 0));
+
+    }
+    */
     private void PlayerStartRun()
     {
         transform.Translate(Vector3.forward * Time.deltaTime * speed);
@@ -76,7 +109,10 @@ public class PlayerController : MonoBehaviour
     {
         if(other.gameObject.CompareTag("Cone"))
         {
-            PlaneRotate.transform.rotate
+            PlaneRotate.gameObject.transform.Rotate(new Vector3(0, 90, 0));
+            PlaneRotate.gameObject.transform.position = new Vector3(-1, 3, 15);
+            startTimer = true;
+         
         }
     }
 
