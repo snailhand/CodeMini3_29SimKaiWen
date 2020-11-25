@@ -6,7 +6,7 @@ using UnityEngine.SceneManagement;
 
 public class PlayerController : MonoBehaviour
 {
-    float speed = 10f;
+    float speed = 5f;
     float jumpHeight = 8f;
     float gravityMod = 2.5f;
     float jumpCount = 0;
@@ -15,6 +15,8 @@ public class PlayerController : MonoBehaviour
     float timeCount = 5;
     int timeCountInt;
     bool rotateBack;
+    float powerLeft = 4;
+    public bool crateOn;
 
     public GameObject PlaneRotate;  
     public Animator PlayerAnim;
@@ -44,6 +46,16 @@ public class PlayerController : MonoBehaviour
             transform.rotation = Quaternion.Euler(0, 180, 0);
             PlayerStartRun();
         }
+        if (Input.GetKey(KeyCode.A))
+        {
+            transform.rotation = Quaternion.Euler(0, 270, 0);
+            PlayerStartRun();
+        }
+        if (Input.GetKey(KeyCode.D))
+        {
+            transform.rotation = Quaternion.Euler(0, 90, 0);
+            PlayerStartRun();
+        }
 
         //Stop Running
 
@@ -55,6 +67,15 @@ public class PlayerController : MonoBehaviour
         {
             PlayerAnim.SetBool("isRun", false);
         }
+        if (Input.GetKeyUp(KeyCode.A))
+        {
+            PlayerAnim.SetBool("isRun", false);
+        }
+        if (Input.GetKeyUp(KeyCode.D))
+        {
+            PlayerAnim.SetBool("isRun", false);
+        }
+
 
         PlayerJump();
 
@@ -63,6 +84,8 @@ public class PlayerController : MonoBehaviour
         {
             timerCountDown();
         }
+
+ 
 
     }
 
@@ -73,19 +96,23 @@ public class PlayerController : MonoBehaviour
             timeCount -= Time.deltaTime;
             timeCountInt = Mathf.RoundToInt(timeCount);
         }
+        else if (timeCount < 1)
+        {
+            RotateBack();
+        }
 
         timerText.GetComponent<Text>().text = "Timer: " + timeCountInt;
 
     }
-    /*
+    
     private void RotateBack()
     {
-   
-            PlaneRotate.gameObject.transform.position = new Vector3(-5, 3, 10);
-            PlaneRotate.gameObject.transform.Rotate(new Vector3(0, 270, 0));
-
+        PlaneRotate.gameObject.transform.position = new Vector3(-5, 3, 10);
+        PlaneRotate.gameObject.transform.Rotate(new Vector3(0, -90, 0));
+        timeCount = 5;
+       
     }
-    */
+    
     private void PlayerStartRun()
     {
         transform.Translate(Vector3.forward * Time.deltaTime * speed);
@@ -107,12 +134,26 @@ public class PlayerController : MonoBehaviour
 
     private void OnTriggerEnter(Collider other)
     {
-        if(other.gameObject.CompareTag("Cone"))
+        if (powerLeft == 0)
         {
-            PlaneRotate.gameObject.transform.Rotate(new Vector3(0, 90, 0));
-            PlaneRotate.gameObject.transform.position = new Vector3(-1, 3, 15);
-            startTimer = true;
-         
+            if (other.gameObject.CompareTag("Cone"))
+            {
+                PlaneRotate.gameObject.transform.Rotate(new Vector3(0, 90, 0));
+                PlaneRotate.gameObject.transform.position = new Vector3(-1, 3, 15);
+                startTimer = true;
+            }
+        }
+
+        if (other.gameObject.CompareTag("powerup"))
+        {
+            powerLeft -= 1;
+            print(powerLeft);
+            Destroy(other.gameObject);
+        }
+
+        if (other.gameObject.CompareTag("Crate"))
+        {
+            crateOn = true;
         }
     }
 
