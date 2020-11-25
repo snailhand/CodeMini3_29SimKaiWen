@@ -17,6 +17,7 @@ public class PlayerController : MonoBehaviour
     bool rotateBack;
     float powerLeft = 4;
     public bool crateOn;
+    bool rotateStop = true;
 
     public GameObject PlaneRotate;  
     public Animator PlayerAnim;
@@ -91,10 +92,11 @@ public class PlayerController : MonoBehaviour
 
     private void timerCountDown()
     { 
-        if(timeCount > 0)
+        if(timeCount > 0 && timeCount < 6)
         {
             timeCount -= Time.deltaTime;
             timeCountInt = Mathf.RoundToInt(timeCount);
+            rotateStop = false;
         }
         else if (timeCount < 1)
         {
@@ -109,7 +111,9 @@ public class PlayerController : MonoBehaviour
     {
         PlaneRotate.gameObject.transform.position = new Vector3(-5, 3, 10);
         PlaneRotate.gameObject.transform.Rotate(new Vector3(0, -90, 0));
-        timeCount = 5;
+        
+        timeCount = 6;
+
        
     }
     
@@ -170,4 +174,6 @@ public class PlayerController : MonoBehaviour
             }
         }
     }
+
+   
 }

@@ -11,10 +11,13 @@ public class MovingPlatformController : MonoBehaviour
     bool ridingCube = false;
     public bool crateOn;
 
+    public GameObject crateObject;
+    public GameObject playerObject;
+
     // Start is called before the first frame update
     void Start()
     {
-        
+
     }
 
     // Update is called once per frame
@@ -25,29 +28,30 @@ public class MovingPlatformController : MonoBehaviour
 
     private void platformMove()
     {
-        if (crateOn)
+
+        //moving platform
+
+        if (transform.position.z < platformLimit && forwardMove)
         {
-            //moving platform
-
-            if (transform.position.z < platformLimit && forwardMove)
-            {
-                transform.Translate(Vector3.forward * Time.deltaTime * speed);
-            }
-            if (!forwardMove)
-            {
-                transform.Translate(Vector3.back * Time.deltaTime * speed);
-            }
-
-
-            if (transform.position.z <= startPos)
-            {
-                forwardMove = true;
-            }
-            if (transform.position.z >= platformLimit)
-            {
-                forwardMove = false;
-            }
+            transform.Translate(Vector3.forward * Time.deltaTime * speed);
         }
+        if (!forwardMove)
+        {
+            transform.Translate(Vector3.back * Time.deltaTime * speed);
+        }
+
+
+        if (transform.position.z <= startPos)
+        {
+            forwardMove = true;
+        }
+        if (transform.position.z >= platformLimit)
+        {
+            forwardMove = false;
+        }
+
     }
+
+
 
 }
